@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noodle & Chopstick</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+
+        h1 {
+            color: rosybrown;
+        }
+
+        .form-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .form-box {
+            flex: 1;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: rosybrown;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: wheat;
+        }
+
+        .response {
+            margin-top: 10px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<h1>🍜 Noodle & Chopstick 🍢</h1>
+<div class="form-container">
+    <div class="form-box">
+        <h2>Добавить лапшу</h2>
+        <input type="text" id="noodleType" placeholder="Введите тип лапши (например, рамен)">
+        <button onclick="addNoodle()">Добавить лапшу</button>
+        <div id="noodleResponse" class="response"></div>
+    </div>
+    <div class="form-box">
+        <h2>Добавить палочки</h2>
+        <input type="text" id="chopstickMaterial" placeholder="Введите материал палочек (например, бамбук)">
+        <button onclick="addChopstick()">Добавить палочки</button>
+        <div id="chopstickResponse" class="response"></div>
+    </div>
+</div>
+<img src="hand-drawn-style-ramen-noodle-bowl_9645-3623.avif" width="451" height="626" alt="Фото рамена и палочек">
+
+<script>
+    async function addNoodle() {
+        const type = document.getElementById('noodleType').value;
+        if (!type) {
+            document.getElementById('noodleResponse').innerText = 'Пожалуйста, введите тип лапши!';
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/noodles', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({type})
+            });
+            const data = await response.json();
+            document.getElementById('noodleResponse').innerText = `Added: ${data.type} (ID: ${data.id})`;
+        } catch (error) {
+            document.getElementById('noodleResponse').innerText = 'Ошибка добавления лапши!';
+        }
+    }
+
+    async function addChopstick() {
+        const material = document.getElementById('chopstickMaterial').value;
+        if (!material) {
+            document.getElementById('chopstickResponse').innerText = 'Пожалуйста, введите материал палочек!';
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/chopsticks', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({material})
+            });
+            const data = await response.json();
+            document.getElementById('chopstickResponse').innerText = `Added: ${data.material} (ID: ${data.id})`;
+        } catch (error) {
+            document.getElementById('chopstickResponse').innerText = 'Ошибка добавления палочек!';
+        }
+    }
+</script>
+</body>
+</html>
